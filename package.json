@@ -1,7 +1,7 @@
 {
   "name": "@tbela99/observer",
   "description": "Manage custom events",
-  "version": "0.1",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "borwser": "dist/index.js",
   "module": "dist/index.mjs",
