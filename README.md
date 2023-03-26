@@ -2,6 +2,12 @@
 
 Manage custom events
 
+# Installation
+
+```shell
+$ npm i @tbela99/observer
+```
+
 # Usage
 
 ## NodeJS
@@ -56,11 +62,11 @@ controller.abort();
 observer.trigger('change', 'I have also changed');
 ```
 
-## Utilities
+# Utilities
 
 Observer provides some built-in event utilities.
 
-### Once
+## Once
 
 execute an event handler once, then remove it
 
@@ -77,7 +83,7 @@ observer.trigger('change', 'a', 'b', 'c');
 
 ```
 
-### Times
+## Times
 
 execute an event handler a certain number of time, after which it is removed
 
@@ -95,7 +101,7 @@ observer.trigger('change', 'a', 'b', 'c');
 observer.trigger('change', 'a', 'b', 'c');
 ```
 
-### Throttle
+## Throttle
 
 creates a throttled handler
 
@@ -110,7 +116,7 @@ observer.trigger('change', 'a', 'b', 'c');
 // ignored
 observer.trigger('change', 'a', 'b', 'c');
 ```
-### Debounce
+## Debounce
 
 creates a debounced handler
 
