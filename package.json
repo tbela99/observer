@@ -1,0 +1,38 @@
+{
+  "name": "@tbela99/observer",
+  "description": "Manage custom events",
+  "version": "0.1",
+  "main": "dist/index.js",
+  "borwser": "dist/index.js",
+  "module": "dist/index.mjs",
+  "typings": "dist/index.d.ts",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tbela99/observer.git"
+  },
+  "keywords": [
+    "event",
+    "observer",
+    "event-dispatcher",
+    "event-emitter"
+  ],
+  "author": "Thierry Bela",
+  "license": "MIT OR LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/tbela99/observer/issues"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "test": "bun run test/observer.mjs"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "rollup": "^3.20.1",
+    "rollup-plugin-dts": "^5.3.0",
+    "tslib": "^2.5.0"
+  }
+}
