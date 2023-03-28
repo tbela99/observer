@@ -107,7 +107,7 @@ creates a throttled handler
 
 ```javascript
 
-// register change listener. It is executed only once in a period of 250ms
+// register throttled change listener. It is executed only once in a period of 250ms
 observer.on('change:throttle(250)', (...args) => console.log(...args));
 
 // event handler is executed
@@ -122,7 +122,7 @@ creates a debounced handler
 
 ```javascript
 
-    // register change listener. It is executed only once in a period of 250ms
+    // register debounced change listener
     observer.on('change:throttle(250)', (...args) => console.log(...args));
 
     // event handler is executed
