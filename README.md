@@ -92,9 +92,9 @@ execute an event handler a certain number of time, after which it is removed
 // register change listener
 observer.on('change:time(2)', (...args) => console.log(...args));
 
-// event handler is executed, then removed
+// event handler is executed
 observer.trigger('change', 'a', 'b', 'c');
-// event handler is executed, then removed
+// event handler is executed
 observer.trigger('change', 'a', 'b', 'c');
 
 // nothing happens
@@ -110,7 +110,7 @@ creates a throttled handler
 // register change listener. It is executed only once in a period of 250ms
 observer.on('change:throttle(250)', (...args) => console.log(...args));
 
-// event handler is executed, then removed
+// event handler is executed
 observer.trigger('change', 'a', 'b', 'c');
 
 // ignored
@@ -125,7 +125,7 @@ creates a debounced handler
     // register change listener. It is executed only once in a period of 250ms
     observer.on('change:throttle(250)', (...args) => console.log(...args));
 
-    // event handler is executed, then removed
+    // event handler is executed
     observer.trigger('change', 'a', 'b', 'c');
     
     // ignored
