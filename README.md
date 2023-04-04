@@ -90,7 +90,7 @@ execute an event handler a certain number of time, after which it is removed
 ```javascript
 
 // register change listener
-observer.on('change:time(2)', (...args) => console.log(...args));
+observer.on('change:times(2)', (...args) => console.log(...args));
 
 // event handler is executed
 observer.trigger('change', 'a', 'b', 'c');
