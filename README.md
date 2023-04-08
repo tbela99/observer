@@ -60,6 +60,9 @@ controller.abort();
 
 // the event handler is unregistered
 observer.trigger('change', 'I have also changed');
+
+console.log(observer.getListeners()) // {change: []}
+console.log(observer.getListeners('change')) // []
 ```
 
 # Utilities

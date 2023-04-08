@@ -26,5 +26,14 @@ export default [
             file: './dist/index.d.ts',
             format: 'es'
         }
+    },
+    {
+        input: 'test/observer.test.ts',
+        plugins: [typescript(), nodeResolve()],
+        output: {
+
+            file: './test/observer.test.mjs',
+            format: 'es'
+        }
     }
 ]

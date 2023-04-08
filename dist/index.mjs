@@ -10,8 +10,8 @@
  */
 function once(name, handler, params, observer) {
     return function (...args) {
-        observer.off(name, handler);
         handler(...args);
+        observer.off(name, handler);
     };
 }
 
@@ -128,12 +128,14 @@ class Observer {
         let callback = handler;
         if (match != null && this.#pseudo.has(match[2])) {
             name = match[1];
+            // @ts-ignore
             callback = this.#pseudo.get(match[2])(name, handler, match[4], this);
         }
         if (!this.#handlers.has(name)) {
             this.#handlers.set(name, new Map);
         }
         signal?.addEventListener('abort', () => this.off(name, handler));
+        // @ts-ignore
         this.#handlers.get(name).set(handler, callback);
         return this;
     }
@@ -142,7 +144,9 @@ class Observer {
             this.#handlers.delete(name);
         }
         else if (this.#handlers.has(name)) {
+            // @ts-ignore
             this.#handlers.get(name).delete(handler);
+            // @ts-ignore
             if (this.#handlers.get(name).size === 0) {
                 this.#handlers.delete(name);
             }
@@ -151,6 +155,7 @@ class Observer {
     }
     trigger(name, ...args) {
         if (this.#handlers.has(name)) {
+            // @ts-ignore
             for (const handler of this.#handlers.get(name).values()) {
                 handler(...args);
             }
@@ -158,6 +163,22 @@ class Observer {
     }
     definePseudo(pseudo, parser) {
         this.#pseudo.set(pseudo, parser);
+    }
+    getListeners(...args) {
+        if (args.length == 0 || args.length > 1) {
+            return [...(args.length > 1 ? args : this.#handlers.keys())].reduce((acc, curr) => {
+                if (this.#handlers.has(curr)) {
+                    // @ts-ignore
+                    acc[curr] = [...this.#handlers.get(curr).keys()];
+                }
+                return acc;
+            }, Object.create(null));
+        }
+        if (this.#handlers.has(args[0])) {
+            // @ts-ignore
+            return [...this.#handlers.get(args[0]).keys()];
+        }
+        return [];
     }
 }
 

@@ -7,6 +7,9 @@ declare class Observer {
     off(name: string, handler?: Function): this;
     trigger(name: string, ...args: any): void;
     definePseudo(pseudo: string, parser: PseudoHandler): void;
+    getListeners(...args: string[]): Function[] | {
+        [key: string]: Function[];
+    };
 }
 
 export { Observer };

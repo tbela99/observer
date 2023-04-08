@@ -14,7 +14,7 @@ export function once(name: string, handler: Function, params: string, observer: 
 
     return function (...args: any) {
 
-        observer.off(name, handler);
         handler(...args);
+        observer.off(name, handler);
     }
 }

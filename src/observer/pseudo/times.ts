@@ -14,7 +14,7 @@ import {Observer} from "../observer";
  */
 export function times(name: string, handler: Function, params: string, observer: Observer) {
 
-    let counter = +params - 1;
+    let counter: number = +params - 1;
 
     if (!Number.isInteger(counter)) {
 

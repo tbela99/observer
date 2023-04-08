@@ -12,7 +12,7 @@
  */
 export function debounce(name: string, handler: Function, params: string) {
 
-    let duration = +params;
+    let duration: number = +params;
 
     if (!Number.isInteger(duration)) {
 
