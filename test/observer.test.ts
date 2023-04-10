@@ -26,6 +26,14 @@ listeners = observer.getListeners();
 
 describe('test observer', async function () {
 
+    it('check has listeners', function () {
+
+        expect(observer.hasListeners()).equals(true);
+        expect(observer.hasListeners(('click'))).equals(true);
+        expect(observer.hasListeners('foo')).equals(false)
+
+    });
+
     it('check listeners', function (done) {
 
         expect(Object.getPrototypeOf(listeners)).equals(null);
@@ -66,10 +74,18 @@ describe('test observer', async function () {
 
     it('add new event listener', function () {
 
-        observer.on('move', () => log('are you moving?'));
+        observer.on('move:once', () => log('are you moving?'));
         listeners = observer.getListeners();
 
+
+        expect(observer.hasListeners(('move'))).equals(true);
         expect(Object.keys(listeners)).deep.equals(['click', 'move']);
+
+        observer.trigger('move', 'nowhere');
+
+
+        expect(observer.hasListeners(('move'))).equals(false);
+        expect(Object.keys(listeners)).deep.equals(['click']);
     });
 });
 

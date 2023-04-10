@@ -734,6 +734,13 @@ class Observer {
     definePseudo(pseudo, parser) {
         this.#pseudo.set(pseudo, parser);
     }
+    hasListeners(name) {
+        if (arguments.length > 0) {
+            // @ts-ignore
+            return this.#handlers.has(name);
+        }
+        return this.#handlers.size > 0;
+    }
     getListeners(...args) {
         if (args.length == 0 || args.length > 1) {
             return [...(args.length > 1 ? args : this.#handlers.keys())].reduce((acc, curr) => {
@@ -766,6 +773,11 @@ observer.on('click:debounce(250)', () => log());
 observer.on('click:times(2)', () => log());
 listeners = observer.getListeners();
 describe('test observer', async function () {
+    it('check has listeners', function () {
+        f(observer.hasListeners()).equals(true);
+        f(observer.hasListeners(('click'))).equals(true);
+        f(observer.hasListeners('foo')).equals(false);
+    });
     it('check listeners', function (done) {
         f(Object.getPrototypeOf(listeners)).equals(null);
         f(Object.keys(listeners)).deep.equals(['click']);

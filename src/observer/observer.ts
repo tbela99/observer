@@ -78,6 +78,17 @@ export class Observer {
         this.#pseudo.set(pseudo, parser);
     }
 
+    hasListeners(name?: string): boolean {
+
+        if (arguments.length > 0) {
+
+            // @ts-ignore
+            return this.#handlers.has(name);
+        }
+
+        return this.#handlers.size > 0;
+    }
+
     getListeners(...args: string[]): Function[] | { [key: string]: Function[] } {
 
         if (args.length == 0 || args.length > 1) {

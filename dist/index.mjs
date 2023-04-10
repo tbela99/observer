@@ -164,6 +164,13 @@ class Observer {
     definePseudo(pseudo, parser) {
         this.#pseudo.set(pseudo, parser);
     }
+    hasListeners(name) {
+        if (arguments.length > 0) {
+            // @ts-ignore
+            return this.#handlers.has(name);
+        }
+        return this.#handlers.size > 0;
+    }
     getListeners(...args) {
         if (args.length == 0 || args.length > 1) {
             return [...(args.length > 1 ? args : this.#handlers.keys())].reduce((acc, curr) => {

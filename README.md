@@ -61,6 +61,9 @@ controller.abort();
 // the event handler is unregistered
 observer.trigger('change', 'I have also changed');
 
+console.log(observer.hasListeners()) // true
+console.log(observer.hasListeners('change')) // true
+console.log(observer.hasListeners('click')) // false
 console.log(observer.getListeners()) // {change: []}
 console.log(observer.getListeners('change')) // []
 ```
