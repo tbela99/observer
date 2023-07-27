@@ -1,8 +1,6 @@
 import * as pseudos from './pseudo';
 import {PseudoHandler} from "../@types";
 
-import {expect} from '@esm-bundle/chai';
-
 export class Observer {
 
     #handlers: Map<string, Map<Function, Function>> = new Map<string, Map<Function, Function>>;
@@ -10,9 +8,9 @@ export class Observer {
 
     constructor() {
 
-        for (const entry of Object.entries(pseudos)) {
+        // @ts-ignore
+        for (const entry of <{[key: string]: PseudoHandler}>Object.entries(pseudos)) {
 
-            // @ts-ignore
             this.definePseudo(entry[0], entry[1]);
         }
     }
@@ -34,6 +32,7 @@ export class Observer {
             this.#handlers.set(name, new Map);
         }
 
+        // @ts-ignore
         signal?.addEventListener('abort', () => this.off(name, handler));
 
         // @ts-ignore
@@ -66,11 +65,27 @@ export class Observer {
         if (this.#handlers.has(name)) {
 
             // @ts-ignore
-            for (const handler of this.#handlers.get(name).values()) {
+            for (const handler of (this.#handlers.get(name).values())) {
 
                 handler(...args);
             }
         }
+    }
+
+    triggerAsync(name: string, ...args: any[]): Promise<any[]> {
+
+        const handlers   = <Promise<any>[]>[];
+
+        if (this.#handlers.has(name)) {
+
+            // @ts-ignore
+            for (const handler of this.#handlers.get(name).values()) {
+
+                handlers.push(Promise.resolve(handler(...args)));
+            }
+        }
+
+        return Promise.all(handlers);
     }
 
     definePseudo(pseudo: string, parser: PseudoHandler) {
@@ -80,7 +95,7 @@ export class Observer {
 
     hasListeners(name?: string): boolean {
 
-        if (arguments.length > 0) {
+        if (arguments.length == 1) {
 
             // @ts-ignore
             return this.#handlers.has(name);

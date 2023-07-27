@@ -24,6 +24,12 @@ observer.on('change', (...args) => console.log(...args));
 // trigger change event
 observer.trigger('change', 'a', 'b', 'c');
 
+// trigger change event
+observer.trigger('change', 'a', 'b', 'c');
+
+// run all event handlers in return a promise
+observer.triggerAsync('change', 'a', 'b', 'c').then(result => console.debug(result));
+
 ```
 
 ## Web
@@ -129,7 +135,7 @@ creates a debounced handler
 ```javascript
 
     // register debounced change listener
-    observer.on('change:throttle(250)', (...args) => console.log(...args));
+    observer.on('change:debounce(250)', (...args) => console.log(...args));
 
     // event handler is executed
     observer.trigger('change', 'a', 'b', 'c');
