@@ -24,7 +24,7 @@ observer.on('click:times(2)', () => log(`> clicked ${++times} times - 2 at most`
 
 listeners = observer.getListeners();
 
-describe('test observer', async function () {
+describe('test observer', function () {
 
     it('check has listeners', function () {
 
@@ -34,7 +34,7 @@ describe('test observer', async function () {
 
     });
 
-    it('check listeners', function (done) {
+    it('check listeners', function () {
 
         expect(Object.getPrototypeOf(listeners)).equals(null);
         expect(Object.keys(listeners)).deep.equals(['click']);
@@ -42,7 +42,7 @@ describe('test observer', async function () {
         expect(listeners.click.length).equals(6);
 
         observer.trigger('click');
-        new Promise(resolve => setTimeout(resolve, 125)).then(done);
+        return new Promise(resolve => setTimeout(resolve, 125));
     });
 
         it('check once removed', function () {
@@ -53,14 +53,14 @@ describe('test observer', async function () {
             expect(listeners.click.length).equals(5);
         });
 
-    it('check abort controller event removed', function (done) {
+    it('check abort controller event removed', function () {
 
         controller.abort();
         listeners = observer.getListeners();
 
         // @ts-ignore
         expect(listeners.click.length).equals(4);
-        new Promise(resolve => setTimeout(resolve, 125)).then(done);
+        return new Promise(resolve => setTimeout(resolve, 125));
     });
 
     it('check times event removed', function () {
@@ -78,12 +78,12 @@ describe('test observer', async function () {
         listeners = observer.getListeners();
 
 
-        expect(observer.hasListeners(('move'))).equals(true);
+        expect(observer.hasListeners('move')).equals(true);
         expect(Object.keys(listeners)).deep.equals(['click', 'move']);
 
         observer.trigger('move', 'nowhere');
 
-
+        listeners = observer.getListeners();
         expect(observer.hasListeners(('move'))).equals(false);
         expect(Object.keys(listeners)).deep.equals(['click']);
     });

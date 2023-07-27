@@ -124,8 +124,8 @@
         #handlers = new Map;
         #pseudo = new Map;
         constructor() {
+            // @ts-ignore
             for (const entry of Object.entries(pseudos)) {
-                // @ts-ignore
                 this.definePseudo(entry[0], entry[1]);
             }
         }
@@ -140,6 +140,7 @@
             if (!this.#handlers.has(name)) {
                 this.#handlers.set(name, new Map);
             }
+            // @ts-ignore
             signal?.addEventListener('abort', () => this.off(name, handler));
             // @ts-ignore
             this.#handlers.get(name).set(handler, callback);
@@ -162,16 +163,26 @@
         trigger(name, ...args) {
             if (this.#handlers.has(name)) {
                 // @ts-ignore
-                for (const handler of this.#handlers.get(name).values()) {
+                for (const handler of (this.#handlers.get(name).values())) {
                     handler(...args);
                 }
             }
+        }
+        triggerAsync(name, ...args) {
+            const handlers = [];
+            if (this.#handlers.has(name)) {
+                // @ts-ignore
+                for (const handler of this.#handlers.get(name).values()) {
+                    handlers.push(Promise.resolve(handler(...args)));
+                }
+            }
+            return Promise.all(handlers);
         }
         definePseudo(pseudo, parser) {
             this.#pseudo.set(pseudo, parser);
         }
         hasListeners(name) {
-            if (arguments.length > 0) {
+            if (arguments.length == 1) {
                 // @ts-ignore
                 return this.#handlers.has(name);
             }

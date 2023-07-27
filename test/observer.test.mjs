@@ -688,8 +688,8 @@ class Observer {
     #handlers = new Map;
     #pseudo = new Map;
     constructor() {
+        // @ts-ignore
         for (const entry of Object.entries(pseudos)) {
-            // @ts-ignore
             this.definePseudo(entry[0], entry[1]);
         }
     }
@@ -704,6 +704,7 @@ class Observer {
         if (!this.#handlers.has(name)) {
             this.#handlers.set(name, new Map);
         }
+        // @ts-ignore
         signal?.addEventListener('abort', () => this.off(name, handler));
         // @ts-ignore
         this.#handlers.get(name).set(handler, callback);
@@ -726,16 +727,26 @@ class Observer {
     trigger(name, ...args) {
         if (this.#handlers.has(name)) {
             // @ts-ignore
-            for (const handler of this.#handlers.get(name).values()) {
+            for (const handler of (this.#handlers.get(name).values())) {
                 handler(...args);
             }
         }
+    }
+    triggerAsync(name, ...args) {
+        const handlers = [];
+        if (this.#handlers.has(name)) {
+            // @ts-ignore
+            for (const handler of this.#handlers.get(name).values()) {
+                handlers.push(Promise.resolve(handler(...args)));
+            }
+        }
+        return Promise.all(handlers);
     }
     definePseudo(pseudo, parser) {
         this.#pseudo.set(pseudo, parser);
     }
     hasListeners(name) {
-        if (arguments.length > 0) {
+        if (arguments.length == 1) {
             // @ts-ignore
             return this.#handlers.has(name);
         }
@@ -772,31 +783,31 @@ observer.on('click:throttle(250)', () => log());
 observer.on('click:debounce(250)', () => log());
 observer.on('click:times(2)', () => log());
 listeners = observer.getListeners();
-describe('test observer', async function () {
+describe('test observer', function () {
     it('check has listeners', function () {
         f(observer.hasListeners()).equals(true);
         f(observer.hasListeners(('click'))).equals(true);
         f(observer.hasListeners('foo')).equals(false);
     });
-    it('check listeners', function (done) {
+    it('check listeners', function () {
         f(Object.getPrototypeOf(listeners)).equals(null);
         f(Object.keys(listeners)).deep.equals(['click']);
         // @ts-ignore
         f(listeners.click.length).equals(6);
         observer.trigger('click');
-        new Promise(resolve => setTimeout(resolve, 125)).then(done);
+        return new Promise(resolve => setTimeout(resolve, 125));
     });
     it('check once removed', function () {
         listeners = observer.getListeners();
         // @ts-ignore
         f(listeners.click.length).equals(5);
     });
-    it('check abort controller event removed', function (done) {
+    it('check abort controller event removed', function () {
         controller.abort();
         listeners = observer.getListeners();
         // @ts-ignore
         f(listeners.click.length).equals(4);
-        new Promise(resolve => setTimeout(resolve, 125)).then(done);
+        return new Promise(resolve => setTimeout(resolve, 125));
     });
     it('check times event removed', function () {
         observer.trigger('click');
@@ -805,8 +816,13 @@ describe('test observer', async function () {
         f(listeners.click.length).equals(3);
     });
     it('add new event listener', function () {
-        observer.on('move', () => log());
+        observer.on('move:once', () => log());
         listeners = observer.getListeners();
+        f(observer.hasListeners('move')).equals(true);
         f(Object.keys(listeners)).deep.equals(['click', 'move']);
+        observer.trigger('move', 'nowhere');
+        listeners = observer.getListeners();
+        f(observer.hasListeners(('move'))).equals(false);
+        f(Object.keys(listeners)).deep.equals(['click']);
     });
 });
