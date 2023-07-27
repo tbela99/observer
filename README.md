@@ -51,7 +51,7 @@ observer.triggerAsync('change', 'a', 'b', 'c').then(result => console.debug(resu
 
 ## Using AbortController
 
-AbortController can be used to unregister and event handler
+AbortController can be used to unregister an event handler
 
 ```javascript
 
@@ -61,16 +61,17 @@ observer.on('change', (...args) => console.log('something has changed', ...args)
 
 observer.trigger('change', 'I have changed');
 
+console.log(observer.hasListeners()) // true
+console.log(observer.hasListeners('change')) // true
+console.log(observer.hasListeners('click')) // false
+
 // remove event listener
 controller.abort();
 
 // the event handler is unregistered
 observer.trigger('change', 'I have also changed');
 
-console.log(observer.hasListeners()) // true
-console.log(observer.hasListeners('change')) // true
-console.log(observer.hasListeners('click')) // false
-console.log(observer.getListeners()) // {change: []}
+console.log(observer.getListeners()) // {}
 console.log(observer.getListeners('change')) // []
 ```
 
